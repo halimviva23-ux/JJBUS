@@ -1,4 +1,4 @@
-// 전북특별자치도 전주시_실시간 운행정보 서비스
+// 국토교통부 TAGO 버스도착정보 API
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -16,9 +16,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://openapi.jeonju.go.kr/jeonjubus/openApi/traffic` +
-      `?ServiceKey=${encodeURIComponent(API_KEY)}` +
-      `&stopStdid=${stationId}` +
+    const url = `http://apis.data.go.kr/1613000/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList` +
+      `?serviceKey=${encodeURIComponent(API_KEY)}` +
+      `&cityCode=35010` +
+      `&nodeId=${stationId}` +
+      `&numOfRows=20` +
+      `&pageNo=1` +
       `&_type=json`;
 
     const response = await fetch(url);
