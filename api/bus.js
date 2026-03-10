@@ -1,4 +1,4 @@
-// Vercel Serverless Function - 공공 API 프록시 (CORS 해결)
+// 전북특별자치도 전주시_실시간 운행정보 서비스
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -16,28 +16,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // url.parse() 대신 URLSearchParams 사용 (Node.js 최신 방식)
-    const params = new URLSearchParams({
-      serviceKey: API_KEY,
-      cityCode: '35010',
-      nodeId: stationId,
-      numOfRows: '20',
-      pageNo: '1',
-      _type: 'json',
-    });
-
-    const url = `https://apis.data.go.kr/1613000/ArvlInfoInqireForStation01/getSttnAcctoArvlPrearngeInfoList?${params.toString()}`;
+    const url = `https://openapi.jeonju.go.kr/jeonjubus/openApi/traffic` +
+      `?ServiceKey=${encodeURIComponent(API_KEY)}` +
+      `&stopStdid=${stationId}` +
+      `&_type=json`;
 
     const response = await fetch(url);
     const text = await response.text();
 
-    // JSON 파싱 전에 텍스트로 먼저 받아서 디버깅
     let data;
     try {
       data = JSON.parse(text);
     } catch (e) {
-      // JSON이 아닌 경우 원문 반환 (디버깅용)
-      return res.status(500).json({ error: 'API 응답이 JSON이 아닙니다.', raw: text.slice(0, 300) });
+      return res.status(500).json({ error: 'API 응답이 JSON이 아닙니다.', raw: text.slice(0, 500) });
     }
 
     return res.status(200).json(data);
